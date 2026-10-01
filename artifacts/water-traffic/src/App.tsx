@@ -443,7 +443,7 @@ function App() {
         </div>
       </section>
       <footer className="wrap footer">
-        <span>© 2026 Water Traffic Agency. {t.footer}</span>
+        <span>© 2020 Water Traffic Agency. {t.footer}</span>
         <ContactChannels id="footer" language={language} channelsLabel={t.channelsLabel} telegramLabel={t.telegram} whatsappLabel={t.whatsapp} whatsappPending={t.whatsappPending} compact />
       </footer>
     </main>
