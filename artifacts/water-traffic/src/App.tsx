@@ -3,7 +3,7 @@ import { ArrowDownRight, Check, MessageCircle, Send, X } from 'lucide-react';
 
 type Language = 'ua' | 'en';
 const CONTACT = 'https://t.me/WaterTraffic_Manager';
-const WHATSAPP_CONTACT: string | null = null;
+const WHATSAPP_CONTACT: string | null = 'https://wa.me/WaterTraffic_Manager';
 const PRESETS = [5000, 15000, 25000, 50000, 100000, 250000];
 const money = (amount: number) => `$${Math.round(amount).toLocaleString('en-US')}`;
 
