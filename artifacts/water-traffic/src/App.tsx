@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
-import { ArrowDownRight, ArrowUpRight, Check, X } from 'lucide-react';
+import { ArrowDownRight, Check, MessageCircle, Send, X } from 'lucide-react';
 
 type Language = 'ua' | 'en';
 const CONTACT = 'https://t.me/WaterTraffic_Manager';
+const WHATSAPP_CONTACT: string | null = null;
 const PRESETS = [5000, 15000, 25000, 50000, 100000, 250000];
 const money = (amount: number) => `$${Math.round(amount).toLocaleString('en-US')}`;
 
@@ -10,6 +11,10 @@ const words = {
   ua: {
     nav: [['calculator', 'Калькулятор'], ['platforms', 'Платформи'], ['comparison', 'Порівняння'], ['infrastructure', 'Інфраструктура'], ['pricing', 'Тарифи']],
     contact: "Зв'язатися",
+    telegram: 'Telegram',
+    whatsapp: 'WhatsApp',
+    whatsappPending: 'Посилання додамо пізніше',
+    channelsLabel: 'Канали зв’язку',
     eyebrow: 'ІНФРАСТРУКТУРА ДЛЯ МАСШТАБУВАННЯ',
     heroTitle: <>Запускайте рекламу<br /><span>без банів та обмежень</span></>,
     heroCopy: 'Преміальні агентські акаунти з високим спендом для арбітражу та масштабування бізнесу. Миттєва заміна при блокуваннях, трастові BIN та 100% збереження залишку на балансі.',
@@ -17,6 +22,8 @@ const words = {
     calcCta: 'Розрахувати бюджет',
     detail: 'АГЕНТСЬКІ АКАУНТИ · ПЕРСОНАЛЬНА ПІДТРИМКА',
     diagram: 'РЕКЛАМНА ІНФРАСТРУКТУРА',
+    accountHub: 'Агентські акаунти',
+    platformHub: 'Платформи',
     sectionCalculator: <>Інтерактивний <span>калькулятор</span></>,
     sectionSubCalc: 'Оцініть комісію за місячним рекламним бюджетом. Ставка залежить від обсягу.',
     budgetLabel: 'Запланований місячний бюджет',
@@ -54,7 +61,7 @@ const words = {
     pricingTitle: 'Наша комісія сервісу',
     pricingCopy: 'Гнучка ставка залежно від вашого місячного рекламного бюджету',
     pricingItems: ['Жодних прихованих платежів, щомісячних орендувань чи комісій за вивід', 'Прозора система з нульовим ризиком втрати коштів'],
-    pricingCta: 'Почати співпрацю в Telegram',
+    pricingCta: 'Почати співпрацю',
     paymentHeading: 'Підтримуємо зручні методи оплати та криптовалюту',
     footer: 'Усі права захищені.',
     tierLabel: (budget: number) => budget <= 10000 ? 'До $10,000 включно · ставка 15%' : budget <= 100000 ? 'Понад $10,000 — до $100,000 · ставка 14% → 10%' : 'Понад $100,000 · VIP ставка 9%',
@@ -62,6 +69,10 @@ const words = {
   en: {
     nav: [['calculator', 'Calculator'], ['platforms', 'Platforms'], ['comparison', 'Comparison'], ['infrastructure', 'Infrastructure'], ['pricing', 'Pricing']],
     contact: 'Contact',
+    telegram: 'Telegram',
+    whatsapp: 'WhatsApp',
+    whatsappPending: 'Link will be added later',
+    channelsLabel: 'Contact channels',
     eyebrow: 'INFRASTRUCTURE FOR SCALE',
     heroTitle: <>Run ads<br /><span>without bans &amp; limits</span></>,
     heroCopy: 'Premium high-spend agency ad accounts for media buying and business scaling. Instant replacement upon bans, trusted BINs, and 100% balance protection.',
@@ -69,6 +80,8 @@ const words = {
     calcCta: 'Calculate budget',
     detail: 'AGENCY ACCOUNTS · PERSONAL SUPPORT',
     diagram: 'ADVERTISING INFRASTRUCTURE',
+    accountHub: 'Agency accounts',
+    platformHub: 'Platforms',
     sectionCalculator: <>Interactive <span>calculator</span></>,
     sectionSubCalc: 'Estimate the commission against your monthly ad budget. The rate depends on spend.',
     budgetLabel: 'Planned monthly budget',
@@ -106,7 +119,7 @@ const words = {
     pricingTitle: 'Our service fee',
     pricingCopy: 'Flexible rate based on your monthly advertising budget',
     pricingItems: ['No hidden fees, monthly rentals, or withdrawal charges', 'Transparent system with zero risk of fund loss'],
-    pricingCta: 'Start cooperation via Telegram',
+    pricingCta: 'Start working together',
     paymentHeading: 'Supported payment methods & crypto',
     footer: 'All rights reserved.',
     tierLabel: (budget: number) => budget <= 10000 ? 'Up to $10,000 inclusive · 15% rate' : budget <= 100000 ? 'Over $10,000 through $100,000 · 14% → 10% rate' : 'Over $100,000 · 9% VIP rate',
@@ -125,29 +138,115 @@ function Brand() {
   );
 }
 
-function HeroArtwork({ label }: { label: string }) {
+function ContactChannels({
+  id,
+  language,
+  telegramLabel,
+  whatsappLabel,
+  whatsappPending,
+  channelsLabel,
+  compact = false,
+}: {
+  id: string;
+  language: Language;
+  telegramLabel: string;
+  whatsappLabel: string;
+  whatsappPending: string;
+  channelsLabel: string;
+  compact?: boolean;
+}) {
   return (
-    <div className="hero-art" aria-hidden="true">
-      <div className="orbit"><span className="orbit-label">{label}</span></div>
-      <span className="float-tag tag-one">META · GOOGLE</span>
-      <span className="float-tag tag-two">TIKTOK · BING</span>
-      <svg viewBox="0 0 390 270" width="88%" style={{ position: 'relative', zIndex: 1 }}>
-        <defs>
-          <linearGradient id="water-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#43d8dc" stopOpacity=".24" />
-            <stop offset="1" stopColor="#43d8dc" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d="M13 89 C71 35 103 138 162 93 S257 42 294 90 S353 139 382 75" fill="none" stroke="#43d8dc" strokeOpacity=".18" strokeWidth="1" />
-        <path d="M9 119 C66 67 103 161 162 120 S256 69 300 117 S357 162 383 102" fill="none" stroke="#43d8dc" strokeOpacity=".34" strokeWidth="1.3" />
-        <path d="M8 149 C62 99 105 185 161 147 S258 96 299 144 S355 190 382 131" fill="none" stroke="#43d8dc" strokeOpacity=".6" strokeWidth="1.7" />
-        <path d="M15 178 C75 132 106 213 165 177 S258 124 305 171 S354 217 377 161" fill="none" stroke="#43d8dc" strokeOpacity=".25" strokeWidth="1.2" />
-        <circle cx="161" cy="147" r="5" fill="#c4ffff" /><circle cx="161" cy="147" r="13" fill="none" stroke="#43d8dc" strokeOpacity=".35" />
-        <circle cx="299" cy="144" r="4" fill="#c4ffff" /><circle cx="299" cy="144" r="11" fill="none" stroke="#43d8dc" strokeOpacity=".3" />
-        <circle cx="69" cy="113" r="3" fill="#43d8dc" />
-        <path d="M11 226H379" stroke="#8db9bc" strokeOpacity=".2" strokeDasharray="3 7" />
-        <path d="M55 215v11m109-11v11m137-11v11" stroke="#8db9bc" strokeOpacity=".28" />
-      </svg>
+    <div
+      className={`channel-links${compact ? ' channel-links-compact' : ''}`}
+      role="group"
+      aria-label={channelsLabel}
+      lang={language === 'ua' ? 'uk' : 'en'}
+      data-testid={`contact-options-${id}`}
+    >
+      <a
+        className="button channel-telegram"
+        href={CONTACT}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`${telegramLabel} — ${channelsLabel}`}
+        data-testid={`link-telegram-${id}`}
+      >
+        <Send size={compact ? 14 : 15} aria-hidden="true" />
+        <span className="channel-label">{telegramLabel}</span>
+      </a>
+      {WHATSAPP_CONTACT ? (
+        <a
+          className="button channel-whatsapp"
+          href={WHATSAPP_CONTACT}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={whatsappLabel}
+          data-testid={`link-whatsapp-${id}`}
+        >
+          <MessageCircle size={compact ? 14 : 15} aria-hidden="true" />
+          <span className="channel-label">{whatsappLabel}</span>
+        </a>
+      ) : (
+        <button
+          type="button"
+          className="button channel-whatsapp channel-pending"
+          disabled
+          title={whatsappPending}
+          aria-label={`${whatsappLabel} — ${whatsappPending}`}
+          data-testid={`button-whatsapp-${id}`}
+        >
+          <MessageCircle size={compact ? 14 : 15} aria-hidden="true" />
+          <span className="channel-label">{whatsappLabel}</span>
+        </button>
+      )}
+    </div>
+  );
+}
+
+function HeroArtwork({ label, accountHub, platformHub }: { label: string; accountHub: string; platformHub: string }) {
+  const platforms = [
+    { short: 'M', name: 'Meta Ads', className: 'meta' },
+    { short: 'G', name: 'Google Ads', className: 'google' },
+    { short: 'T', name: 'TikTok Ads', className: 'tiktok' },
+    { short: 'B', name: 'Bing Ads', className: 'bing' },
+  ];
+
+  return (
+    <div className="hero-art">
+      <div className="infra-panel" role="img" aria-label={`${label}: ${platforms.map(({ name }) => name).join(', ')}`}>
+        <div className="infra-panel-head">
+          <span className="infra-live" aria-hidden="true" />
+          <span>{label}</span>
+          <span className="infra-count">04</span>
+        </div>
+        <div className="infra-hub">
+          <span className="infra-hub-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect x="3.5" y="4" width="17" height="6" rx="1.5" />
+              <rect x="3.5" y="14" width="17" height="6" rx="1.5" />
+              <path d="M7 7h.01M7 17h.01M11 7h6M11 17h6" />
+            </svg>
+          </span>
+          <span className="infra-hub-copy">
+            <strong>{accountHub}</strong>
+            <span>{platformHub}</span>
+          </span>
+          <span className="infra-hub-status">●</span>
+        </div>
+        <div className="infra-platform-grid">
+          {platforms.map((platform) => (
+            <div className="infra-platform" key={platform.name}>
+              <span className={`platform-mark ${platform.className}`}>{platform.short}</span>
+              <span>{platform.name}</span>
+            </div>
+          ))}
+        </div>
+        <div className="infra-panel-foot">
+          <span>{accountHub}</span>
+          <span className="infra-connector" aria-hidden="true"><i /><i /><i /></span>
+          <span>{platformHub}</span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -192,7 +291,7 @@ function App() {
               <button type="button" className={language === 'ua' ? 'active' : ''} onClick={() => setLanguage('ua')} aria-pressed={language === 'ua'} data-testid="button-language-ua">UA</button>
               <button type="button" className={language === 'en' ? 'active' : ''} onClick={() => setLanguage('en')} aria-pressed={language === 'en'} data-testid="button-language-en">EN</button>
             </div>
-            <a className="button button-primary small-button" href={CONTACT} target="_blank" rel="noreferrer">{t.contact}<ArrowUpRight size={14} aria-hidden="true" /></a>
+            <ContactChannels id="header" language={language} channelsLabel={t.channelsLabel} telegramLabel={t.telegram} whatsappLabel={t.whatsapp} whatsappPending={t.whatsappPending} compact />
           </div>
         </div>
       </header>
@@ -203,12 +302,12 @@ function App() {
             <h1>{t.heroTitle}</h1>
             <p className="hero-copy">{t.heroCopy}</p>
             <div className="hero-actions">
-              <a className="button button-primary" href={CONTACT} target="_blank" rel="noreferrer">{t.accounts}<ArrowUpRight size={16} aria-hidden="true" /></a>
+              <ContactChannels id="hero" language={language} channelsLabel={t.channelsLabel} telegramLabel={t.accounts} whatsappLabel={t.whatsapp} whatsappPending={t.whatsappPending} />
               <a className="button button-quiet" href="#calculator">{t.calcCta}<ArrowDownRight size={15} aria-hidden="true" /></a>
             </div>
             <div className="hero-foot"><span className="live-dot" />{t.detail}</div>
           </div>
-          <div className="reveal reveal-delay"><HeroArtwork label={t.diagram} /></div>
+          <div className="reveal reveal-delay"><HeroArtwork label={t.diagram} accountHub={t.accountHub} platformHub={t.platformHub} /></div>
         </div>
       </section>
       <div className="band">
@@ -261,7 +360,7 @@ function App() {
               <div className="result"><div className="result-label">{t.rate}</div><div className="result-value" data-testid="text-rate">{calculation.rate.toFixed(1)}%</div></div>
               <div className="result"><div className="result-label">{t.fee}</div><div className="result-value" data-testid="text-fee">{money(calculation.fee)}</div></div>
             </div>
-            <div className="calc-cta"><p>{t.pricingCopy}</p><a className="button button-primary" href={CONTACT} target="_blank" rel="noreferrer">{t.run}<ArrowUpRight size={15} aria-hidden="true" /></a></div>
+            <div className="calc-cta"><p>{t.pricingCopy}</p><ContactChannels id="calculator" language={language} channelsLabel={t.channelsLabel} telegramLabel={t.run} whatsappLabel={t.whatsapp} whatsappPending={t.whatsappPending} /></div>
           </div>
         </div>
       </section>
@@ -313,15 +412,15 @@ function App() {
         <div className="wrap">
           <div className="pricing">
             <div><p className="eyebrow">{language === 'ua' ? 'ПРОЗОРІ УМОВИ' : 'CLEAR TERMS'}</p><h2 className="price-label">{t.pricingTitle}</h2><div className="price">9%–15%</div><p className="price-desc">{t.pricingCopy}</p></div>
-            <div><ul className="price-list">{t.pricingItems.map((item) => <li key={item}><Check className="check" size={16} aria-hidden="true" />{item}</li>)}</ul><a className="button button-primary" href={CONTACT} target="_blank" rel="noreferrer">{t.pricingCta}<ArrowUpRight size={15} aria-hidden="true" /></a></div>
+            <div><ul className="price-list">{t.pricingItems.map((item) => <li key={item}><Check className="check" size={16} aria-hidden="true" />{item}</li>)}</ul><ContactChannels id="pricing" language={language} channelsLabel={t.channelsLabel} telegramLabel={t.pricingCta} whatsappLabel={t.whatsapp} whatsappPending={t.whatsappPending} /></div>
           </div>
         </div>
       </section>
       <section className="section section-tint" aria-label={language === 'ua' ? 'Як почати' : 'How to start'}>
         <div className="wrap">
-          <div className="section-heading">
-            <div><p className="eyebrow">{language === 'ua' ? 'НАСТУПНИЙ КРОК' : 'NEXT STEP'}</p><h2 className="section-title">{language === 'ua' ? <>Почніть розмову<br /><span>в Telegram</span></> : <>Start a conversation<br /><span>on Telegram</span></>}</h2></div>
-            <a className="button button-primary" href={CONTACT} target="_blank" rel="noreferrer">{t.contact}<ArrowUpRight size={15} aria-hidden="true" /></a>
+            <div className="section-heading">
+            <div><p className="eyebrow">{language === 'ua' ? 'НАСТУПНИЙ КРОК' : 'NEXT STEP'}</p><h2 className="section-title">{language === 'ua' ? <>Оберіть зручний<br /><span>канал зв’язку</span></> : <>Choose your preferred<br /><span>contact channel</span></>}</h2></div>
+            <ContactChannels id="start" language={language} channelsLabel={t.channelsLabel} telegramLabel={t.telegram} whatsappLabel={t.whatsapp} whatsappPending={t.whatsappPending} />
           </div>
           <div className="steps">
             {(language === 'ua'
@@ -339,7 +438,7 @@ function App() {
       </section>
       <footer className="wrap footer">
         <span>© 2026 Water Traffic Agency. {t.footer}</span>
-        <a href={CONTACT} target="_blank" rel="noreferrer">Telegram <ArrowUpRight size={12} aria-hidden="true" /></a>
+        <ContactChannels id="footer" language={language} channelsLabel={t.channelsLabel} telegramLabel={t.telegram} whatsappLabel={t.whatsapp} whatsappPending={t.whatsappPending} compact />
       </footer>
     </main>
   );
