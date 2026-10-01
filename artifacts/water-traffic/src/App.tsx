@@ -31,6 +31,7 @@ const words = {
     tierLead: 'Ставка за вашим бюджетом',
     tiers: ['$1,000–$10,000 · 15%', 'Понад $10,000–$100,000 · 14% → 10%', 'Понад $100,000 · 9% VIP'],
     spend: 'Рекламний спенд', rate: 'Ваша ставка комісії', fee: 'Сума комісії',
+    savings: 'Економія комісії', savingsNote: 'Порівняно з комісією 15% на цей самий бюджет.',
     run: 'Запустити з цим бюджетом',
     platformEyebrow: 'ДЕ МИ ПРАЦЮЄМО',
     platformTitle: <>Платформи, з якими <span>ми працюємо</span></>,
@@ -89,6 +90,7 @@ const words = {
     tierLead: 'Rate for your budget',
     tiers: ['$1,000–$10,000 · 15%', 'Over $10,000–$100,000 · 14% → 10%', 'Over $100,000 · 9% VIP'],
     spend: 'Ad spend', rate: 'Your fee rate', fee: 'Total fee',
+    savings: 'Commission savings', savingsNote: 'Compared with a 15% fee on the same budget.',
     run: 'Launch with this budget',
     platformEyebrow: 'WHERE WE WORK',
     platformTitle: <>Platforms <span>we work with</span></>,
@@ -268,7 +270,9 @@ function App() {
     else if (budget <= 100000) rate = 14 - ((budget - 10000) / 90000) * 4;
     else rate = 9;
     const roundedRate = Number(rate.toFixed(1));
-    return { rate: roundedRate, fee: Math.round(budget * roundedRate / 100) };
+    const fee = Math.round(budget * roundedRate / 100);
+    const standardFee = Math.round(budget * 15 / 100);
+    return { rate: roundedRate, fee, savings: Math.max(0, standardFee - fee) };
   }, [budget]);
   const selectedPreset = PRESETS.includes(budget) ? budget : null;
   const progress = `${((budget - 1000) / (500000 - 1000)) * 100}%`;
@@ -359,7 +363,9 @@ function App() {
               <div className="result"><div className="result-label">{t.spend}</div><div className="result-value" data-testid="text-spend">{money(budget)}</div></div>
               <div className="result"><div className="result-label">{t.rate}</div><div className="result-value" data-testid="text-rate">{calculation.rate.toFixed(1)}%</div></div>
               <div className="result"><div className="result-label">{t.fee}</div><div className="result-value" data-testid="text-fee">{money(calculation.fee)}</div></div>
+              <div className="result"><div className="result-label">{t.savings}</div><div className="result-value" data-testid="text-savings">{money(calculation.savings)}</div></div>
             </div>
+            <p className="savings-note">{t.savingsNote}</p>
             <div className="calc-cta"><p>{t.pricingCopy}</p><ContactChannels id="calculator" language={language} channelsLabel={t.channelsLabel} telegramLabel={t.run} whatsappLabel={t.whatsapp} whatsappPending={t.whatsappPending} /></div>
           </div>
         </div>
