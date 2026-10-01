@@ -2,34 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["головний"] # если ваша основная ветка называется main, замените на "main"
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.pageОтлично, доступ к GitHub Pages открыт! Осталось сделать буквально пару кликов.
-
-1. В блоке **Джерело** (Source) нажмите на синюю кнопку **Розгортання з гілки** (Deploy from a branch).
-2. В появившемся меню выберите **GitHub Actions**.
-3. После этого ниже появится список шаблонов. Найдите **Static HTML** (или **Node.js**) и нажмите кнопку **Configure**.
-4. Полностью замените содержимое предложенного файла на следующий код (он заходит в нужную папку `artifacts/water-traffic`, собирает проект и публикует его):
-
-```yaml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: ["головний"] # или "main" / "master", если ваша ветка называется иначе
+    branches: ["main"]
 
 permissions:
   contents: read
