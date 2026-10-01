@@ -36,6 +36,7 @@ jobs:
       - name: Install & Build
         env:
           PORT: 5000
+          BASE_PATH: "/"
         run: |
           cd artifacts/water-traffic
           pnpm install --no-frozen-lockfile
