@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Water Traffic"
+description = "A bilingual Ukrainian and English landing page for Water Traffic advertising accounts, with an interactive commission calculator, service comparison, and contact links."
+version = "1.0.0"
+id = "artifacts/water-traffic"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25559
+
+[services.development]
+run = "pnpm --filter @workspace/water-traffic run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/water-traffic", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/water-traffic/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25559"
+BASE_PATH = "/"
