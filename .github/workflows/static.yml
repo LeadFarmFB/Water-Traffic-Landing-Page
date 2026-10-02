@@ -36,7 +36,6 @@ jobs:
       - name: Install & Build
         env:
           PORT: 5000
-          VITE_BASE_PATH: "/"
           BASE_PATH: "/"
         run: |
           cd artifacts/water-traffic
