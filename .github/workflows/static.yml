@@ -42,7 +42,6 @@ jobs:
           pnpm install --no-frozen-lockfile
           pnpm run build
 
-      # Додаємо створення файлу CNAME прямо в зібрану папку dist
       - name: Add CNAME
         run: echo "trafwater.com" > artifacts/water-traffic/dist/CNAME
 
